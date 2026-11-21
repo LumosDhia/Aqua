@@ -1,0 +1,89 @@
+.plan-svg {
+  display: block;
+  user-select: none;
+}
+
+.plan-field {
+  cursor: pointer;
+  outline: none;
+}
+
+.plan-field:focus-visible rect:first-child {
+  stroke: #0f3329;
+  stroke-width: 3;
+}
+
+.plan-label {
+  font: 600 15px 'Instrument Sans', 'Inter', system-ui, sans-serif;
+  fill: #1f2a24;
+}
+
+.plan-label-small {
+  font: 500 9px 'Instrument Sans', 'Inter', system-ui, sans-serif;
+  fill: #55624f;
+  paint-order: stroke;
+  stroke: rgba(246, 241, 228, 0.9);
+  stroke-width: 2.5px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .plan-sway {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: plan-sway 7s ease-in-out infinite alternate;
+  }
+
+  .plan-graze {
+    animation: plan-graze 5s ease-in-out infinite;
+  }
+
+  .plan-shimmer {
+    animation: plan-shimmer 6s ease-in-out infinite;
+  }
+
+  .plan-clouds {
+    animation: plan-clouds 70s linear infinite alternate;
+  }
+}
+
+@keyframes plan-sway {
+  from {
+    transform: rotate(-1.6deg);
+  }
+  to {
+    transform: rotate(1.6deg);
+  }
+}
+
+@keyframes plan-graze {
+  0%,
+  70%,
+  100% {
+    transform: translate(0, 0);
+  }
+  80% {
+    transform: translate(0.6px, 0.5px);
+  }
+  90% {
+    transform: translate(1px, 0);
+  }
+}
+
+@keyframes plan-shimmer {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes plan-clouds {
+  from {
+    transform: translateX(-60px);
+  }
+  to {
+    transform: translateX(80px);
+  }
+}
