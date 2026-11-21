@@ -1,0 +1,50 @@
+AquaFarm standalone sketch: problems found and fixed
+=====================================================
+
+File: aquafarm_standalone.ino
+
+Not done: the sketch was NOT compiled (no Arduino toolchain on this machine).
+Compile it in the Arduino IDE and test with the pump disconnected first.
+What was tested: the dashboard page, in headless Firefox at phone size against a
+mock of the /data, /mode and /pump routes (layout, bars, pump countdown, Auto and
+Manual states). Buttons were not tapped, and the low-tank alarm and sensor-fault
+states were not rendered.
+
+PROBLEMS FIXED
+--------------
+1. Compile error from the paste. The text \"msg\"(emoji)" and \"status\"(emoji)"
+   was broken. It is now \"msg\":\" and \"status\":\".
+2. JSON safety. The status and msg texts are now escaped before going into JSON.
+3. Stale alarm. The alarm and the red LED were only updated once a minute. They now
+   follow the tank on every 3 second sample, and refilling the tank clears the
+   alarm and triggers a new decision at once.
+4. Blocking buzzer. The three beeps used delay() and froze the web server for about
+   1 second. The buzzer is now non-blocking.
+5. Tank sensor fault. If the ultrasonic sensor gets no echo at all, the page shows
+   "Sensor error" and the status says "tank sensor error, pump blocked" instead of
+   looking like an empty tank. The pump stays blocked (fail safe).
+6. Unknown mode value. /mode now refuses any value other than 0 or 1.
+7. Page requests. The page no longer sends overlapping requests, uses a 5 second
+   timeout, pauses polling when the tab is hidden, and marks the data as stale
+   after two failed refreshes.
+8. Water now and the duration list start disabled until the first data arrives.
+9. Phones leaving the Wi-Fi. Phones often drop a network with no internet. A captive
+   DNS (DNSServer) and a redirect for unknown addresses were added, so a "sign in"
+   popup opens the dashboard. This is new code: check it on your phone. If the popup
+   misbehaves, open http://192.168.4.1 in the normal browser.
+10. Buzzer pin is set LOW and the LEDs are cleared at start-up. The Wi-Fi network
+    allows at most 4 clients.
+
+INTERFACE
+---------
+Same look as the Aqua website: cream background, forest green header with the Aqua
+logo, serif titles, rounded cards and pill buttons, same colours (forest, leaf,
+ochre, hanko red, tank orange). Tap targets are 52 px. The tank and soil bars show a
+tick at the threshold. The pump card shows the seconds left. Fonts fall back to
+system fonts because the board has no internet.
+
+KEPT AS IT WAS
+--------------
+All pins, thresholds and the decision logic are unchanged, so the scenarios of the
+project report still apply. One behaviour to know about: in Auto mode with dry soil
+the pump can start about 1.5 seconds after power-up.
