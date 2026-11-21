@@ -1,0 +1,34 @@
+** Drc report for AquaFarm-PCB.kicad_pcb **
+** Created on 2026-11-22T01:57:45+0100 **
+
+** Found 6 DRC violations **
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(85.0000 mm, 44.9000 mm): Footprint text of D4 (K)
+    @(103.4000 mm, 44.8000 mm): Segment of K1 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(48.0600 mm, 82.5100 mm): Segment of J5 on F.Silkscreen
+    @(48.4000 mm, 79.0000 mm): PCB text '1' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(34.4000 mm, 79.0000 mm): PCB text '1' on F.Silkscreen
+    @(34.5600 mm, 82.5100 mm): Segment of J4 on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(34.5500 mm, 78.8000 mm): Segment of J4 on F.Silkscreen
+    @(34.4000 mm, 79.0000 mm): PCB text '1' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(23.5600 mm, 82.5100 mm): Segment of J3 on F.Silkscreen
+    @(23.4000 mm, 79.0000 mm): PCB text '1' on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(23.5500 mm, 78.8000 mm): Segment of J3 on F.Silkscreen
+    @(23.4000 mm, 79.0000 mm): PCB text '1' on F.Silkscreen
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

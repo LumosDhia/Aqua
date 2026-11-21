@@ -1,0 +1,347 @@
+AquaFarm: Custom PCB Wiring Report
+
+
+
+
+AquaFarm: Custom PCB Wiring Report
+Prepared for Mohamed | AquaFarm smart irrigation | 22 November 2026
+
+
+1. Purpose and scope
+This report describes how every part of the AquaFarm plugs into one custom PCB: pin
+assignments, connectors, the small circuits that live on the board, power, and layout rules.
+It follows the current firmware (aquafarm_standalone.ino), so the board works with the
+existing code without changes. The ESP32 dev board sits in sockets on the PCB so it can
+be replaced, and every off-board part (sensors, pump, display, power) connects through a
+labelled connector.
+
+
+2. Board architecture
+       ESP32 dev board in two female header rows (not soldered).
+       5 V input on connector J1 feeds the 5 V rail. The ESP32 board's regulator makes the 3.3
+       V rail.
+       Pump switch on the board: a 5 V relay (K1) driven by a transistor.
+       Status parts on the board: green, blue and red LEDs, and a buzzer with its own driver.
+       Connectors for the pump, soil sensor, rain sensor, ultrasonic sensor, DHT11 and the
+       round display.
+       The ECHO level divider and the sensor filter capacitors sit on the board, close to the
+       ESP32.
+
+
+3. GPIO assignment
+
+  GPIO         Function              Direction   Goes to        Notes
+
+  34           Soil moisture         Analog      J3 pin 3       Input-only, ADC1. 100 nF to GND at
+               (AOUT)                in                         the ESP32
+
+  35           Rain sensor (S)       Analog      J4 pin 3       Input-only, ADC1. 100 nF to GND at
+                                     in                         the ESP32
+
+  4            DHT11 DATA            In/out      J6 pin 2       10 kΩ pull-up to 3V3
+
+  27           HC-SR04 TRIG          Out         J5 pin 2       Direct connection
+
+  18           HC-SR04 ECHO          In          J5 pin 3 via   1 kΩ + 2 kΩ divider (5 V to 3.3 V)
+                                                 divider
+
+
+
+
+                                                                                                 Page 1 of 7
+AquaFarm: Custom PCB Wiring Report
+
+
+
+
+  GPIO         Function              Direction   Goes to         Notes
+
+  26           Pump relay            Out         Q1 base via 1   10 kΩ pull-down keeps the pump
+                                                 kΩ              off during boot
+
+  25           Green LED             Out         D1 via 330 Ω
+
+  33           Blue LED              Out         D2 via 330 Ω
+
+  32           Red LED               Out         D3 via 330 Ω
+
+  23           Buzzer                Out         Q2 base via 1   10 kΩ pull-down on the base
+                                                 kΩ
+
+  5            Display SCL           Out         J7 pin 5        Boot-strapping pin, no pull-down
+
+  21           Display SDA           Out         J7 pin 4
+               (MOSI)
+
+  22           Display RST           Out         J7 pin 1
+
+  15           Display CS            Out         J7 pin 2        Boot-strapping pin, no pull-down.
+                                                                 Assumed, see section 10
+
+  19           Display DC            Out         J7 pin 3        Assumed, see section 10
+
+
+Do not use GPIO 0, 2 and 12 (boot strapping), 6 to 11 (flash) or 1 and 3 (serial). GPIO 13, 14,
+16 and 17 are free and go to the spare header J8 (16 and 17 are not available on boards with
+PSRAM).
+
+
+4. Power design
+       Input: regulated 5 V, 2 A, on J1. A 1.5 A resettable fuse and a series Schottky diode
+       (1N5819) for reverse-polarity protection are optional.
+       The 5 V rail feeds the ESP32 VIN pin, the relay coil, the HC-SR04, the buzzer and the
+       pump (through the relay contacts).
+       The 3.3 V rail comes from the ESP32 board's 3V3 pin and feeds the soil sensor, rain
+       sensor, DHT11 and display.
+       Put a 470 to 1000 µF electrolytic capacitor (10 V or more) right at J1, and a 10 µF plus
+       100 nF pair next to the ESP32 VIN pin. They absorb the pump's start-up surge, which
+       can otherwise cause brownout resets.
+       Use a star ground: the pump and relay return current goes straight back to the J1
+       ground, never through the ESP32 or sensor ground traces.
+
+
+
+
+                                                                                               Page 2 of 7
+AquaFarm: Custom PCB Wiring Report
+
+
+
+
+      If the ESP32 board is powered from J1 and USB at the same time (for example while
+      flashing), check that your board has a diode that stops the two supplies from feeding
+      each other.
+
+Current budget (estimates, measure the real pump current before choosing the supply):
+
+
+  Load                                 Rail    Typical current
+
+  ESP32 with Wi-Fi access point        5V      100 to 300 mA, with higher peaks
+
+  Relay coil                           5V      70 to 90 mA
+
+  HC-SR04                              5V      15 mA
+
+  Buzzer                               5V      about 30 mA
+
+  Mini submersible pump                5V      100 to 300 mA, higher at start-up
+
+  Soil sensor, rain sensor, DHT11      3.3 V   under 10 mA together
+
+  Round display                        3.3 V   30 to 60 mA
+
+
+The total peak is about 0.8 to 1 A, so a 5 V, 2 A supply leaves margin.
+
+
+5. Circuit blocks
+
+5.1 Pump and relay
+Parts: K1 5 V relay (for example SRD-05VDC-SL-C), Q1 NPN transistor (BC337 or 2N2222),
+R1 1 kΩ, R2 10 kΩ, D4 and D5 1N4007, C1 100 nF.
+
+      GPIO26 goes through R1 to the base of Q1. R2 pulls the base to GND, so the relay stays
+      off while the ESP32 boots or resets.
+      The Q1 emitter goes to GND and the collector to one side of the relay coil. The other
+      side of the coil goes to +5 V.
+      D4 sits across the relay coil, with the stripe (cathode) on the +5 V side.
+      Relay contacts: COM to +5 V, NO to J2 pin 1 (PUMP+). J2 pin 2 (PUMP-) goes to GND.
+      Leave NC unconnected. Nothing may join NC to NO, because that bypasses the relay
+      and keeps the pump running.
+      D5 sits across J2 (the pump terminals), stripe toward PUMP+, with C1 in parallel. D5
+      absorbs the voltage spike when the relay opens.
+
+The firmware sets GPIO26 high to switch the pump on, which matches this circuit.
+
+
+
+
+                                                                                       Page 3 of 7
+AquaFarm: Custom PCB Wiring Report
+
+
+
+
+5.2 Ultrasonic sensor (HC-SR04)
+      J5 carries 5 V, TRIG, ECHO and GND. TRIG goes straight to GPIO27.
+      The ECHO signal is 5 V and must be reduced for the ESP32. R3 (1 kΩ) goes from J5
+      ECHO to a middle node, R4 (2 kΩ) from that node to GND, and the node goes to
+      GPIO18. The result is 5 V × 2/3 = 3.3 V.
+      If you do not have a 2 kΩ resistor, use two 1 kΩ resistors in series. Place the divider
+      close to GPIO18.
+
+
+5.3 Soil and rain sensors
+      Both run from 3.3 V and use analog inputs on ADC1 (GPIO34 and GPIO35), which keep
+      working while Wi-Fi is on.
+      For the soil sensor, wire only the AOUT pin. The DO pin gives just 0 or 4095 and is not
+      used. Print AOUT on the silkscreen next to J3 pin 3.
+      Add a 100 nF capacitor from each analog line to GND, at the ESP32 end. Keep the
+      cable to the rain sensor short, since long cables pick up noise.
+
+
+5.4 DHT11
+      J6 carries 3V3, DATA and GND. R5 (10 kΩ) pulls DATA up to 3V3. It does no harm if the
+      module already has its own pull-up.
+
+
+5.5 Round display (GC9A01)
+      J7 follows the module's pin order: RST, CS, DC, SDA, SCL, GND, VCC. VCC goes to 3.3
+      V, and the backlight is always on, since the module has no backlight pin.
+      SDA and SCL are SPI data and clock, not I2C. Keep these traces short and away from
+      the relay and pump traces.
+
+
+5.6 LEDs and buzzer
+      D1 (green), D2 (blue) and D3 (red) each connect from their GPIO through a 330 Ω
+      resistor to the LED, then to GND.
+      Buzzer driver: GPIO23 goes through R6 (1 kΩ) to the base of Q2 (BC337). R7 (10 kΩ)
+      pulls the base to GND. The Q2 emitter goes to GND, the buzzer's + pin to +5 V and its -
+      pin to the Q2 collector. Use an active buzzer.
+
+
+
+
+                                                                                            Page 4 of 7
+AquaFarm: Custom PCB Wiring Report
+
+
+
+
+6. Connector plan
+
+  Ref        Type                         Pins, in order                 Connects to
+
+  J1         2-way screw terminal, 5.08   +5 V, GND                      Power supply
+             mm
+
+  J2         2-way screw terminal, 5.08   PUMP+, PUMP-                   Mini submersible
+             mm                                                          pump
+
+  J3         3-way JST-XH, 2.54 mm        3V3, GND, AOUT                 Soil moisture sensor
+
+  J4         3-way JST-XH, 2.54 mm        3V3, GND, S                    Rain sensor
+
+  J5         4-way JST-XH, 2.54 mm        5 V, TRIG, ECHO, GND           HC-SR04
+
+  J6         3-way JST-XH, 2.54 mm        3V3, DATA, GND                 DHT11
+
+  J7         7-way pin header, 2.54 mm    RST, CS, DC, SDA, SCL, GND,    Round display
+                                          VCC
+
+  J8         Pin header (optional)        GPIO13, 14, 16, 17, 3V3, GND   Spare
+
+
+Use keyed connectors for the sensors so they cannot be plugged in backwards. Label
+every pin on the silkscreen.
+
+
+7. Layout guidelines
+       Two-layer board, 1.6 mm FR4, 1 oz copper, with a ground pour on both sides and
+       stitching vias.
+       Pump path (J1, relay contacts, J2): traces at least 0.8 mm wide. Signal traces: 0.25 mm.
+       Put the relay, J1, J2 and the bulk capacitor together on one board edge, away from the
+       ESP32 antenna and the analog lines.
+       Let the ESP32 antenna end overhang the board edge or keep copper out of the area
+       under it.
+       Place the 100 nF analog capacitors and the ECHO divider right next to their ESP32
+       pins.
+       Mark diode polarity (stripe), connector pin 1, and 'NC: leave empty' on the silkscreen.
+       Add M3 mounting holes in the corners.
+
+
+
+
+                                                                                            Page 5 of 7
+AquaFarm: Custom PCB Wiring Report
+
+
+
+
+8. Parts list (excluding sensors, pump and display)
+
+  Qty        Part                    Value or type                   Use
+
+  1          Relay K1                5 V coil, SPDT, 10 A contacts   Pump switch
+
+  2          NPN transistor Q1,      BC337 or 2N2222                 Relay and buzzer drivers
+             Q2
+
+  2          Diode D4, D5            1N4007                          Relay coil and pump spike
+                                                                     protection
+
+  1          Diode (optional)        1N5819                          Reverse-polarity protection
+
+  3          LED D1 to D3            Green, blue, red                Status
+
+  3          Resistor                330 Ω                           LED current limiting
+
+  3          Resistor R1, R3, R6     1 kΩ                            Relay base, ECHO divider,
+                                                                     buzzer base
+
+  1          Resistor R4             2 kΩ                            ECHO divider
+
+  3          Resistor R2, R5, R7     10 kΩ                           Pull-downs and DHT11 pull-up
+
+  4          Capacitor               100 nF                          Soil, rain, pump terminals,
+                                                                     ESP32 VIN
+
+  1          Capacitor               10 µF                           ESP32 VIN
+
+  1          Electrolytic            470 to 1000 µF, 10 V or more    Supply and pump surge
+             capacitor
+
+  1          Active buzzer           5V                              Alarm
+
+  1          Resettable fuse         1.5 A                           Input protection
+             (optional)
+
+  2          Female header row       15 or 19 pin, to match the      ESP32 socket
+                                     ESP32 board
+
+  1          Connector set           J1 to J8 as listed above        Off-board parts
+
+
+
+
+9. Bring-up and test procedure
+   1. Before ordering, print the board at 1:1 on paper and place the real ESP32 board, relay
+      and connectors on it to check the fit.
+
+
+
+
+                                                                                                Page 6 of 7
+AquaFarm: Custom PCB Wiring Report
+
+
+
+
+   2. Solder the board without the ESP32 and the relay. Check for a short between +5 V and
+      GND with a multimeter.
+   3. Apply 5 V and check the 5 V rail and the ESP32 socket pins. Then plug in the ESP32
+      and the relay.
+   4. Upload the sketch and open the serial monitor. There should be no brownout message
+      at boot.
+   5. With the pump disconnected, press Water now in Manual mode. The relay should
+      click, and COM to NO should conduct only while it is on.
+   6. Connect the pump. It must stay off until commanded, then run for the chosen time
+      and stop.
+   7. Calibrate the soil sensor (SOIL_DRY and SOIL_WET from the raw value in dry air and in
+      water) and the tank (FULL_CM and EMPTY_CM).
+
+
+10. Open points
+      Display CS (GPIO15) and DC (GPIO19) are assumed from the sketch. Confirm them
+      against the real wiring before ordering the board.
+      Check the pin order printed on the display module against the J7 order above.
+      The current figures are estimates. Measure the pump's running and start-up current
+      to confirm the 2 A supply.
+      The soil sensor must be wired from its AOUT pin, never DO.
+
+
+
+
+                                                                                      Page 7 of 7
+
