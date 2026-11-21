@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <title>Aqua</title>
+  <circle cx="24" cy="24" r="24" fill="#1b4d3e"/>
+  <path d="M24 9.5C24 9.5 13.5 22 13.5 29.2a10.5 10.5 0 0 0 21 0C34.5 22 24 9.5 24 9.5z" fill="#F4F7F1"/>
+  <path d="M27.5 21c7.2-3.2 10.4 4.6 4.6 9.2-1.8-3.6-2.8-6.8-4.6-9.2z" fill="#7CB069"/>
+</svg>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Aqua is the water assistant for farms in Tunisia. It watches soil and tank, reads the rain, and helps you water with care.">
+  <title>Aqua — Water assistant for farms in Tunisia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg?v=2" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png?v=2" />
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=2" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <svg class="svg-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <symbol id="i-drop-leaf" viewBox="0 0 48 48">
+      <circle cx="24" cy="24" r="24" fill="currentColor"/>
+      <path d="M24 9.5C24 9.5 13.5 22 13.5 29.2a10.5 10.5 0 0 0 21 0C34.5 22 24 9.5 24 9.5z" fill="#F4F7F1"/>
+      <path d="M27.5 21c7.2-3.2 10.4 4.6 4.6 9.2-1.8-3.6-2.8-6.8-4.6-9.2z" fill="#7CB069"/>
+      <path d="M28.2 23.2c2.6 1.6 3.8 4.2 2.2 6.4" fill="none" stroke="#F4F7F1" stroke-width="1.2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24">
+      <circle cx="12" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M5.5 19.2c.8-3.4 3.3-5.2 6.5-5.2s5.7 1.8 6.5 5.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24">
+      <path d="M8 5.5 L16 12 L8 18.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24">
+      <path d="M15 5.5 L7 12 L15 18.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24">
+      <rect x="3.5" y="5.5" width="17" height="13" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M4 7.2 L12 13.2 L20 7.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24">
+      <path d="M12 21s-6.2-6.1-6.2-10.2A6.2 6.2 0 0 1 12 4.6a6.2 6.2 0 0 1 6.2 6.2C18.2 14.9 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="12" cy="10.6" r="2" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24">
+      <path d="M12 6v12M6 12h12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-soil" viewBox="0 0 64 64">
+      <path d="M10 42c6-4 12-2 18-6s10-3 16-1 10 2 10 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M8 48c8-3 14 1 22-3 8-4 14-1 22 1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M12 54c10-2 16 2 24-2 8-3 14 0 18 1" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M22 38c0-8 4-16 6-22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M20 22c3 1 6-2 8-1" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      <circle cx="40" cy="28" r="2.2" fill="none" stroke="currentColor" stroke-width="1.3"/>
+      <path d="M40 26v-6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-rain" viewBox="0 0 64 64">
+      <path d="M20 28c0-8 8-14 16-12 4-8 16-8 20 0 8 1 12 10 6 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M24 42v8M32 40v10M40 42v8M48 41v7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-crop" viewBox="0 0 64 64">
+      <path d="M32 56V28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M32 40c-10-2-16-12-14-22 8 2 14 10 14 22z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M32 36c10-2 16-10 14-20-8 2-14 10-14 20z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M28 18c-2-6 2-10 6-12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-chat" viewBox="0 0 64 64">
+      <path d="M14 18h36c2.4 0 4 1.8 4 4v18c0 2.2-1.6 4-4 4H28l-10 10v-10H14c-2.4 0-4-1.8-4-4V22c0-2.2 1.6-4 4-4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M22 30h20M22 36h12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-bell" viewBox="0 0 64 64">
+      <path d="M32 12c-8 0-14 6-14 16v8l-4 6h36l-4-6v-8c0-10-6-16-14-16z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M26 48c1.6 4 10.4 4 12 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <circle cx="32" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="1.4"/>
+    </symbol>
+    <symbol id="i-web" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="18" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M14 32h36M32 14c6 6 8 12 8 18s-2 12-8 18c-6-6-8-12-8-18s2-12 8-18z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    </symbol>
+    <symbol id="i-desktop" viewBox="0 0 64 64">
+      <rect x="10" y="14" width="44" height="28" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M22 50h20M32 42v8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-android" viewBox="0 0 64 64">
+      <rect x="20" y="16" width="24" height="36" rx="4" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M28 12l-3-5M36 12l3-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="28" cy="26" r="1.4" fill="currentColor"/>
+      <circle cx="36" cy="26" r="1.4" fill="currentColor"/>
+      <path d="M27 36h10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-wa" viewBox="0 0 64 64">
+      <path d="M18 44l-4 10 11-3c3 1.4 6 2.2 9 2.2 12 0 22-9.4 22-21S46 11 34 11 12 20.4 12 32c0 3.2.8 6.4 2.4 9.2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M26 26c.4 6 6 12 12 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-leaf" viewBox="0 0 48 48">
+      <path d="M10 34c8-18 22-26 32-28-2 12-8 26-26 32-4-2-6-4-6-4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M14 32c8-6 16-16 22-24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-drop" viewBox="0 0 32 32">
+      <path d="M16 4c0 0-8 10-8 16a8 8 0 0 0 16 0C24 14 16 4 16 4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+    </symbol>
+  </svg>
+
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="./index.html">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="40" height="40"><use href="#i-drop-leaf"></use></svg>
+        </span>
+        <span class="brand-text">
+          <strong>Aqua</strong>
+          <small>Water assistant for farms</small>
+        </span>
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="sr-only">Open menu</span>
+        <span class="burger" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Primary">
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#crops">Crops</a></li>
+          <li><a href="#advisor">Advisor</a></li>
+          <li><a href="#notes">Field notes</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <a class="login" href="../" aria-label="Log in">
+        <svg width="22" height="22" aria-hidden="true"><use href="#i-user"></use></svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" data-hero aria-label="Featured">
+      <div class="hero-slides">
+        <img class="is-active" src="images/jp-farmer-terrace.jpg" alt="A farmer works in a flooded terraced field at golden hour, with the sea beyond." width="1600" height="1000">
+        <img src="images/tn-cap-bon-olive.jpg" alt="An olive grove on the Cap Bon peninsula in Tunisia." width="1600" height="1000">
+        <img src="images/jp-nishigaoka-terrace.jpg" alt="Terraced valley fields holding water between the hills." width="1600" height="1000">
+        <img src="images/tn-olive-testour.jpg" alt="A lone olive tree on a green hill near Testour, Tunisia." width="1600" height="1000">
+        <img src="images/jp-shizuoka-tea.jpg" alt="Neat rows of tea bushes on a hillside in Shizuoka, Japan." width="1600" height="1000">
+        <img src="images/tn-olive-dahar.jpg" alt="Olive trees on the hills of the Dahar region in Tunisia." width="1600" height="1000">
+      </div>
+      <div class="hero-veil" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <h1 class="vert hero-enter">Every drop,<br>in its place.</h1>
+        <p class="hero-kicker vert hero-enter">The water assistant for the farms of Tunisia</p>
+        <div class="hero-actions hero-enter">
+          <a class="pill pill-hero-solid" href="../">Open the app</a>
+          <a class="pill pill-hero-ghost" href="../">Log in</a>
+        </div>
+      </div>
+      <a class="scroll-cue vert" href="#about">Scroll</a>
+      <span class="hero-hanko" aria-hidden="true">
+        <span class="hanko">水</span>
+      </span>
+      <div class="hero-wave" aria-hidden="true">
+        <svg viewBox="0 0 1440 220" preserveAspectRatio="none">
+          <path class="wave-a" d="M0 92c120 48 240-40 360-8 140 38 220 70 360 18 150-56 240-10 360 22 110 30 240-18 360-40v136H0z"/>
+          <path class="wave-b" d="M0 128c140-46 250 40 390 12 160-32 250-70 380-18 140 56 230 18 360-12 90-22 210 8 310 28v82H0z"/>
+          <path class="wave-c" d="M0 158c180 36 300-54 460-22 170 34 260 62 400 8 150-58 280-8 400 24 90 22 140-8 180-20v74H0z"/>
+          <path class="wave-line" d="M0 150c200 40 320-50 480-16 170 36 270 54 400 4 160-60 300-6 420 22 90 20 120-6 140-14" fill="none"/>
+          <path class="wave-line" d="M0 170c160 20 280-36 420-8 150 30 280 40 400-6 140-52 280 4 400 18 90 12 160-8 220-16" fill="none"/>
+        </svg>
+      </div>
+    </section>
+
+    <section class="intro" id="about">
+      <div class="wrap intro-grid">
+        <div class="intro-stack reveal">
+          <figure class="shot shot-a">
+            <img src="images/tn-cap-bon-olive.jpg" alt="Olive trees on the Cap Bon coast, with the sea and a small fort beyond." width="800" height="600" loading="lazy">
+          </figure>
+          <figure class="shot shot-b">
+            <img src="images/tn-olive-dahar.jpg" alt="Olive groves on the dry hills of the Dahar." width="800" height="600" loading="lazy">
+          </figure>
+          <span class="chip"><svg width="14" height="14" aria-hidden="true"><use href="#i-pin"></use></svg> Tunisia</span>
+        </div>
+
+        <div class="intro-copy reveal">
+          <span class="hanko" aria-hidden="true">恵</span>
+          <h2 class="vert">Care for the land,<br>drop by drop</h2>
+          <p>Local, practical help for the farms of Tunisia. Aqua watches the soil and the tank, reads the rain, and shows the water you save. Guides inside the app welcome farmers, young people and women entering the land.</p>
+          <a class="pill pill-vert" href="#features">
+            <svg width="16" height="16" aria-hidden="true"><use href="#i-plus"></use></svg>
+            Learn more
+          </a>
+        </div>
+
+        <div class="intro-east reveal">
+          <figure class="shot shot-c">
+            <img src="images/jp-tsuzura-terrace.jpg" alt="A quiet terraced valley, fields stepped down the hills and filled with water." width="1000" height="700" loading="lazy">
+          </figure>
+          <span class="chip chip-right"><svg width="14" height="14" aria-hidden="true"><use href="#i-pin"></use></svg> Japan</span>
+        </div>
+      </div>
+      <p class="intro-bridge reveal">Two lands, one craft. Both know how to farm where water is precious.</p>
+    </section>
+
+    <div class="hills" aria-hidden="true">
+      <svg viewBox="0 0 1440 180" preserveAspectRatio="none">
+        <path class="hill-a" d="M0 180c80-70 180-110 300-90 140 24 200 90 340 70 160-24 220-110 380-90 140 18 200 80 280 60 80-18 100-50 140-70v130z"/>
+        <path class="hill-b" d="M0 180c120-40 220-90 360-70 150 22 210 80 350 50 170-36 250-20 380 10 130 28 220-40 350-60v70z"/>
+        <path class="hill-c" d="M0 180c200-20 340-70 500-50 180 24 260 10 400-20 160-34 280 10 360 20 90 10 140-10 180-24v74z"/>
+        <path class="wave-line" d="M40 140c120-30 220-10 320 10 140 28 240-30 380-20 150 12 240 40 360 10 130-32 220-10 300 8" fill="none"/>
+      </svg>
+      <span class="drift leaf leaf-a"><svg width="48" height="48"><use href="#i-leaf"></use></svg></span>
+      <span class="drift drop drop-a"><svg width="22" height="22"><use href="#i-drop"></use></svg></span>
+      <span class="ornament fruit" aria-hidden="true"></span>
+    </div>
+
+    <section class="quick" data-carousel aria-label="Quick access">
+      <div class="wrap quick-row">
+        <div class="quick-side">
+          <h2 class="vert">Quick access</h2>
+          <p>Open the work of the farm</p>
+        </div>
+        <div class="carousel">
+          <button type="button" class="round-btn ghost" data-prev aria-label="Previous items">
+            <svg width="18" height="18"><use href="#i-arrow-left"></use></svg>
+          </button>
+          <div class="carousel-viewport">
+            <div class="carousel-track" data-track>
+              <a class="quick-card" href="#features">
+                <span class="icon-wrap"><svg width="52" height="52"><use href="#i-soil"></use></svg></span>
+                <span class="quick-name">Soil and water</span>
+                <svg class="quick-go" width="18" height="18" aria-hidden="true"><use href="#i-arrow"></use></svg>
+              </a>
+              <a class="quick-card" href="#features">
+                <span class="icon-wrap"><svg width="52" height="52"><use href="#i-rain"></use></svg></span>
+                <span class="quick-name">Rain-aware watering</span>
+                <svg class="quick-go" width="18" height="18" aria-hidden="true"><use href="#i-arrow"></use></svg>
+              </a>
+              <a class="quick-card" id="crops" href="#features">
+                <span class="icon-wrap"><svg width="52" height="52"><use href="#i-crop"></use></svg></span>
+                <span class="quick-name">Crop guide</span>
+                <svg class="quick-go" width="18" height="18" aria-hidden="true"><use href="#i-arrow"></use></svg>
+              </a>
+              <a class="quick-card" href="#advisor">
+                <span class="icon-wrap"><svg width="52" height="52"><use href="#i-chat"></use></svg></span>
+                <span class="quick-name">Advisor</span>
+                <svg class="quick-go" width="18" height="18" aria-hidden="true"><use href="#i-arrow"></use></svg>
+              </a>
+              <a class="quick-card" href="#alerts">
+                <span class="icon-wrap"><svg width="52" height="52"><use href="#i-bell"></use></svg></span>
+                <span class="quick-name">Alerts</span>
+                <svg class="quick-go" width="18" height="18" aria-hidden="true"><use href="#i-arrow"></use></svg>
+              </a>
+            </div>
+          </div>
+          <button type="button" class="round-btn ghost" data-next aria-label="Next items">
+            <svg width="18" height="18"><use href="#i-arrow"></use></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="gifts" id="features">
+      <div class="wrap">
+        <header class="section-head reveal">
+          <span class="kana" aria-hidden="true">農</span>
+          <h2>What Aqua gives you</h2>
+          <p>Quiet tools for soil, rain, crops and people on the farm.</p>
+        </header>
+        <div class="gifts-grid">
+          <article class="gift reveal">
+            <div class="gift-media">
+              <img src="images/tn-olive-dahar.jpg" alt="Sunlit olive land, a place to watch the soil." width="640" height="640" loading="lazy">
+            </div>
+            <h3>Soil watch</h3>
+            <p>Moisture in the soil, watched over time, so you see how it changes.</p>
+          </article>
+          <article class="gift reveal">
+            <div class="gift-media gift-draw">
+              <svg class="scene" viewBox="0 0 200 160" aria-hidden="true">
+                <ellipse cx="100" cy="128" rx="54" ry="10" fill="none" stroke="#1B4D3E" stroke-width="1.4"/>
+                <path d="M52 86c0-8 10-14 22-16h52c12 2 22 8 22 16v34c0 8-10 14-22 16H74c-12-2-22-8-22-16z" fill="none" stroke="#1B4D3E" stroke-width="1.5"/>
+                <path d="M62 98h76M62 110h76" stroke="#4A9B88" stroke-width="1.2" opacity=".7"/>
+                <path d="M100 54c0 0-12 14-12 22a12 12 0 0 0 24 0c0-8-12-22-12-22z" fill="none" stroke="#2F7A6B" stroke-width="1.5"/>
+                <path d="M118 40c8-2 16 6 10 14" fill="none" stroke="#7CB069" stroke-width="1.3"/>
+              </svg>
+            </div>
+            <h3>Tank level</h3>
+            <p>The water in the tank, shown as it rises and falls.</p>
+          </article>
+          <article class="gift reveal">
+            <div class="gift-media">
+              <img src="images/jp-futago-terrace.jpg" alt="Flooded terrace fields ready for rain-aware watering." width="640" height="640" loading="lazy">
+            </div>
+            <h3>Rain-aware watering</h3>
+            <p>Water now, water a little, or wait for the rain. See the water you save.</p>
+          </article>
+          <article class="gift reveal">
+            <div class="gift-media">
+              <img src="images/tn-cap-bon-olive.jpg" alt="A coastal olive farm, planned by well, network and rain tank." width="640" height="640" loading="lazy">
+            </div>
+            <h3>Water planning</h3>
+            <p>For the week, the month and the year, by well, public network and rain tank. Each crop has its need.</p>
+          </article>
+          <article class="gift reveal">
+            <div class="gift-media">
+              <img src="images/jp-tsuzura-terrace.jpg" alt="Stepped plots of land, like a map of a farm." width="640" height="640" loading="lazy">
+            </div>
+            <h3>Farm map</h3>
+            <p>A visual map of the farm with coloured plots.</p>
+          </article>
+          <article class="gift reveal" id="advisor">
+            <div class="gift-media gift-draw">
+              <svg class="scene" viewBox="0 0 200 160" aria-hidden="true">
+                <path d="M46 48h108c6 0 10 4 10 10v52c0 6-4 10-10 10H96l-22 18v-18H46c-6 0-10-4-10-10V58c0-6 4-10 10-10z" fill="none" stroke="#1B4D3E" stroke-width="1.5"/>
+                <path d="M64 74h72M64 90h44" stroke="#1B4D3E" stroke-width="1.4" stroke-linecap="round"/>
+                <circle cx="154" cy="38" r="10" fill="none" stroke="#2F7A6B" stroke-width="1.4"/>
+                <path d="M154 32v8M150 36h8" stroke="#2F7A6B" stroke-width="1.3" stroke-linecap="round"/>
+                <path d="M40 30c8-10 22-8 28 0" fill="none" stroke="#7CB069" stroke-width="1.3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>Advisor with voice</h3>
+            <p>Tunisian farming, spoken aloud, so everyone can ask, including people who do not read easily.</p>
+          </article>
+          <article class="gift reveal" id="alerts">
+            <div class="gift-media gift-draw">
+              <svg class="scene" viewBox="0 0 200 160" aria-hidden="true">
+                <path d="M100 28c-22 0-38 16-38 40v18l-10 14h96l-10-14V68c0-24-16-40-38-40z" fill="none" stroke="#1B4D3E" stroke-width="1.5"/>
+                <path d="M86 118c4 10 24 10 28 0" fill="none" stroke="#1B4D3E" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="100" cy="24" r="5" fill="none" stroke="#C23B2E" stroke-width="1.4"/>
+                <path d="M138 46c10 4 16 14 16 24" fill="none" stroke="#2F7A6B" stroke-width="1.3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>Alerts</h3>
+            <p>Empty tank, dry soil, rain coming — on WhatsApp and on the phone.</p>
+          </article>
+          <article class="gift reveal">
+            <div class="gift-media gift-draw">
+              <svg class="scene" viewBox="0 0 200 160" aria-hidden="true">
+                <circle cx="100" cy="48" r="14" fill="none" stroke="#1B4D3E" stroke-width="1.5"/>
+                <path d="M78 92c4-16 12-22 22-22s18 6 22 22" fill="none" stroke="#1B4D3E" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="58" cy="70" r="10" fill="none" stroke="#2F7A6B" stroke-width="1.4"/>
+                <path d="M42 104c3-12 8-16 16-16s13 4 16 16" fill="none" stroke="#2F7A6B" stroke-width="1.4" stroke-linecap="round"/>
+                <circle cx="142" cy="70" r="10" fill="none" stroke="#7CB069" stroke-width="1.4"/>
+                <path d="M126 104c3-12 8-16 16-16s13 4 16 16" fill="none" stroke="#7CB069" stroke-width="1.4" stroke-linecap="round"/>
+                <circle cx="100" cy="122" r="8" fill="none" stroke="#D4A054" stroke-width="1.3"/>
+              </svg>
+            </div>
+            <h3>Farm roles</h3>
+            <p>Owner, manager, technician and viewer. Each person sees and does only what they should.</p>
+          </article>
+        </div>
+        <div class="gifts-actions reveal">
+          <a class="pill pill-green" href="#features">See all features</a>
+          <a class="pill pill-ink" href="#questions">Common questions</a>
+        </div>
+        <div class="questions" id="questions">
+          <details>
+            <summary>When does Aqua tell me to water?</summary>
+            <p>It reads the weather and the soil, then says water now, water a little, or wait for the rain. You also see the water you save.</p>
+          </details>
+          <details>
+            <summary>Who can speak with the advisor?</summary>
+            <p>Anyone on the farm. The advisor knows Tunisian farming and can be used by voice, so people who do not read easily can still ask.</p>
+          </details>
+          <details>
+            <summary>Where does Aqua work?</summary>
+            <p>On the web, on the desktop and on Android. Alerts also reach you on WhatsApp and on the phone.</p>
+          </details>
+        </div>
+      </div>
+      <span class="drift leaf leaf-b" aria-hidden="true"><svg width="40" height="40"><use href="#i-leaf"></use></svg></span>
+      <span class="drift drop drop-b" aria-hidden="true"><svg width="18" height="18"><use href="#i-drop"></use></svg></span>
+    </section>
+
+    <section class="screens" id="everywhere" data-carousel aria-label="Where Aqua works">
+      <div class="screens-wave" aria-hidden="true">
+        <svg viewBox="0 0 1440 140" preserveAspectRatio="none">
+          <path class="wave-c" d="M0 80c180-50 320 30 500 8 190-24 300-60 470-20 180 42 300 10 470-20v92H0z"/>
+          <path class="wave-b" d="M0 100c200-30 360 20 540 0 200-22 320-50 480-10 170 42 280 8 420-16v66H0z"/>
+          <path class="wave-line" d="M0 88c220-36 380 16 560-4 200-22 340-40 500 4 170 46 260 10 380-12" fill="none"/>
+        </svg>
+      </div>
+      <div class="wrap">
+        <header class="section-head reveal">
+          <h2>On every screen</h2>
+          <p>The same care, wherever you open it. Ready for solar power, with less water wasted and less energy used.</p>
+        </header>
+        <div class="carousel screens-carousel">
+          <button type="button" class="round-btn ghost" data-prev aria-label="Previous platforms">
+            <svg width="18" height="18"><use href="#i-arrow-left"></use></svg>
+          </button>
+          <div class="carousel-viewport">
+            <div class="carousel-track" data-track>
+              <article class="plat">
+                <span class="plat-icon"><svg width="48" height="48"><use href="#i-web"></use></svg></span>
+                <h3>Web</h3>
+                <p>Open Aqua in the browser of the farm office or the house.</p>
+              </article>
+              <article class="plat">
+                <span class="plat-icon"><svg width="48" height="48"><use href="#i-desktop"></use></svg></span>
+                <h3>Desktop</h3>
+                <p>A calm desk view for planning the week, the month and the year.</p>
+              </article>
+              <article class="plat">
+                <span class="plat-icon"><svg width="48" height="48"><use href="#i-android"></use></svg></span>
+                <h3>Android</h3>
+                <p>Carry soil, tank and rain with you in the field.</p>
+              </article>
+              <article class="plat">
+                <span class="plat-icon"><svg width="48" height="48"><use href="#i-wa"></use></svg></span>
+                <h3>WhatsApp</h3>
+                <p>Alerts for an empty tank, dry soil, and rain on the way.</p>
+              </article>
+            </div>
+          </div>
+          <button type="button" class="round-btn ghost" data-next aria-label="Next platforms">
+            <svg width="18" height="18"><use href="#i-arrow"></use></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="notes" id="notes">
+      <div class="wrap notes-grid">
+        <div class="notes-map reveal">
+          <div class="blob">
+            <img src="images/tn-cap-bon-olive.jpg" alt="Olive groves of Cap Bon in Tunisia, with the sea behind." width="720" height="900" loading="lazy">
+          </div>
+          <div class="map-pin">
+            <svg width="22" height="22" aria-hidden="true"><use href="#i-pin"></use></svg>
+            <span>Tunisia</span>
+          </div>
+          <span class="map-hill" aria-hidden="true"></span>
+          <span class="map-plot" aria-hidden="true"></span>
+        </div>
+        <div class="notes-list">
+          <h2 class="vert reveal">Field notes</h2>
+          <ul>
+            <li class="reveal">
+              <span class="tag">Irrigation</span>
+              <p>Wait when rain is on the way. Aqua reads the forecast and tells you when to hold back.</p>
+            </li>
+            <li class="reveal">
+              <span class="tag">Soil</span>
+              <p>Watch moisture as it changes. Water when the soil is dry, not by habit.</p>
+            </li>
+            <li class="reveal">
+              <span class="tag">Tank</span>
+              <p>Know the level of the tank before it runs empty. An alert will reach you on the phone.</p>
+            </li>
+            <li class="reveal">
+              <span class="tag">Rain</span>
+              <p>Rain in the tank is a gift. Plan by well, public network and rain tank, through the seasons.</p>
+            </li>
+          </ul>
+          <a class="pill pill-green reveal" href="#notes">More notes</a>
+        </div>
+      </div>
+      <span class="drift leaf leaf-c" aria-hidden="true"><svg width="44" height="44"><use href="#i-leaf"></use></svg></span>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <div class="footer-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 220" preserveAspectRatio="none">
+        <defs>
+          <pattern id="contour" width="120" height="28" patternUnits="userSpaceOnUse">
+            <path d="M0 18c20-10 40 10 60 0s40-10 60 0" fill="none" stroke="#d7eadc" stroke-width=".6" opacity=".35"/>
+          </pattern>
+        </defs>
+        <path class="foot-a" d="M0 90c160 50 300-40 460-10 180 34 280 70 430 20 170-56 300-10 430 24 80 22 100-8 120-20v116H0z"/>
+        <path class="foot-b" d="M0 128c180-40 320 36 500 10 190-28 300-64 470-18 180 48 300 14 470-16v116H0z"/>
+        <path class="foot-c" d="M0 158c200 24 340-40 520-12 190 30 300 48 460 4 170-48 300 0 460 22v48H0z"/>
+        <rect x="0" y="120" width="1440" height="100" fill="url(#contour)"/>
+      </svg>
+    </div>
+    <div class="wrap footer-inner">
+      <a class="brand brand-foot" href="#top">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="40" height="40"><use href="#i-drop-leaf"></use></svg>
+        </span>
+        <span class="brand-text">
+          <strong>Aqua</strong>
+          <small>Water assistant for farms</small>
+        </span>
+      </a>
+      <nav aria-label="Footer">
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#crops">Crops</a></li>
+          <li><a href="#advisor">Advisor</a></li>
+          <li><a href="#notes">Field notes</a></li>
+        </ul>
+      </nav>
+      <p class="footer-mail">
+        <svg width="20" height="20" aria-hidden="true"><use href="#i-mail"></use></svg>
+        <span>Contact</span>
+      </p>
+      <p class="copy">© Aqua. All rights reserved.</p>
+    </div>
+    <span class="hanko foot-hanko" aria-hidden="true">水</span>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" role="img" aria-label="Example of a hand-drawn farm plan with olives, tomatoes, wheat, a house, a well and a tank">
+  <defs>
+    <filter id="pencil" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0.55  0 0 0 0 0.5  0 0 0 0 0.4  0 0 0 0.09 0"/></filter>
+    <pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="9" stroke="#3d4a3a" stroke-width="1.1" opacity=".55"/></pattern>
+    <pattern id="rows" width="12" height="12" patternUnits="userSpaceOnUse"><line x1="0" y1="6" x2="12" y2="6" stroke="#3d4a3a" stroke-width="1.2" opacity=".5"/></pattern>
+  </defs>
+  <rect width="800" height="560" fill="#f6f0df"/>
+  <rect width="800" height="560" filter="url(#paper)"/>
+  <g filter="url(#pencil)" fill="none" stroke="#2f3a2d" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" font-family="'Segoe Print','Bradley Hand','Comic Sans MS','Comic Neue',cursive">
+    <!-- boundary of the farm -->
+    <path d="M42 48 L755 40 L770 505 L55 520 Z" stroke-width="3.4"/>
+    <!-- road -->
+    <path d="M20 540 C200 520 400 535 790 528" stroke-dasharray="3 9"/>
+    <text x="330" y="552" font-size="17" fill="#2f3a2d" stroke="none">road to the village</text>
+    <!-- olives field -->
+    <path d="M70 80 L395 74 L402 255 L78 262 Z"/>
+    <path d="M70 80 L395 74 L402 255 L78 262 Z" fill="url(#hatch)" stroke="none"/>
+    <g stroke-width="2"><circle cx="115" cy="120" r="12"/><circle cx="170" cy="118" r="12"/><circle cx="225" cy="120" r="12"/><circle cx="280" cy="118" r="12"/><circle cx="335" cy="119" r="12"/>
+      <circle cx="115" cy="175" r="12"/><circle cx="170" cy="173" r="12"/><circle cx="225" cy="175" r="12"/><circle cx="280" cy="174" r="12"/><circle cx="335" cy="175" r="12"/>
+      <circle cx="115" cy="228" r="12"/><circle cx="170" cy="227" r="12"/><circle cx="225" cy="229" r="12"/><circle cx="280" cy="228" r="12"/><circle cx="335" cy="229" r="12"/></g>
+    <text x="150" y="102" font-size="24" fill="#2f3a2d" stroke="none" transform="rotate(-1 150 102)">olives  (2 ha)</text>
+    <!-- tomatoes (greenhouse) -->
+    <path d="M430 82 L725 78 L728 175 L433 181 Z"/>
+    <path d="M430 82 L725 78 L728 175 L433 181 Z" fill="url(#rows)" stroke="none"/>
+    <path d="M440 96 L716 92 M440 112 L718 108 M441 128 L719 124 M442 144 L720 140 M443 160 L721 156" stroke-width="1.4" opacity=".7"/>
+    <text x="500" y="75" font-size="22" fill="#2f3a2d" stroke="none">tomatoes - 2 greenhouses</text>
+    <!-- wheat field -->
+    <path d="M432 215 L728 210 L732 330 L436 336 Z"/>
+    <g stroke-width="1.6" opacity=".8"><path d="M455 236 q4 -14 8 0 M483 238 q4 -14 8 0 M511 235 q4 -14 8 0 M539 237 q4 -14 8 0 M567 235 q4 -14 8 0 M595 236 q4 -14 8 0 M623 234 q4 -14 8 0 M651 236 q4 -14 8 0 M679 234 q4 -14 8 0
+      M465 270 q4 -14 8 0 M493 272 q4 -14 8 0 M521 269 q4 -14 8 0 M549 271 q4 -14 8 0 M577 269 q4 -14 8 0 M605 270 q4 -14 8 0 M633 268 q4 -14 8 0 M661 270 q4 -14 8 0 M689 268 q4 -14 8 0
+      M455 304 q4 -14 8 0 M483 306 q4 -14 8 0 M511 303 q4 -14 8 0 M539 305 q4 -14 8 0 M567 303 q4 -14 8 0 M595 304 q4 -14 8 0 M623 302 q4 -14 8 0 M651 304 q4 -14 8 0 M679 302 q4 -14 8 0"/></g>
+    <text x="520" y="206" font-size="22" fill="#2f3a2d" stroke="none">wheat  (3 ha)</text>
+    <!-- house -->
+    <path d="M110 330 L110 400 L205 400 L205 330 L157 296 Z"/><path d="M142 400 L142 365 L168 365 L168 400"/>
+    <text x="108" y="422" font-size="21" fill="#2f3a2d" stroke="none">farm house</text>
+    <!-- well -->
+    <circle cx="300" cy="360" r="21"/><circle cx="300" cy="360" r="12"/><path d="M279 360 L321 360" stroke-width="1.4"/>
+    <text x="268" y="404" font-size="21" fill="#2f3a2d" stroke="none">well</text>
+    <!-- water tank -->
+    <path d="M355 335 L355 392 C355 410 407 410 407 392 L407 335"/><ellipse cx="381" cy="335" rx="26" ry="9"/>
+    <text x="340" y="434" font-size="21" fill="#2f3a2d" stroke="none">tank 20 m3</text>
+    <!-- pipes -->
+    <path d="M321 360 L355 362 M381 410 L381 455 L560 455 L560 340 M560 455 L700 455 L700 336" stroke-dasharray="10 6" stroke-width="2.2"/>
+    <path d="M250 262 L250 330 M250 330 L279 355" stroke-dasharray="10 6" stroke-width="2.2"/>
+    <!-- sheep pen -->
+    <path d="M110 455 L300 452 L304 505 L112 509 Z" stroke-dasharray="14 5"/>
+    <g stroke-width="2"><ellipse cx="150" cy="480" rx="15" ry="9"/><circle cx="168" cy="474" r="5"/><ellipse cx="205" cy="484" rx="15" ry="9"/><circle cx="223" cy="478" r="5"/><ellipse cx="258" cy="478" rx="15" ry="9"/><circle cx="276" cy="472" r="5"/></g>
+    <text x="150" y="445" font-size="19" fill="#2f3a2d" stroke="none">sheep (40)</text>
+    <!-- north arrow -->
+    <path d="M735 470 L735 420 M735 420 L724 442 M735 420 L746 442" stroke-width="3"/>
+    <text x="728" y="412" font-size="22" fill="#2f3a2d" stroke="none">N</text>
+    <!-- scale -->
+    <path d="M580 500 L720 500 M580 494 L580 506 M720 494 L720 506" stroke-width="2"/>
+    <text x="606" y="492" font-size="17" fill="#2f3a2d" stroke="none">about 100 m</text>
+  </g>
+</svg>
