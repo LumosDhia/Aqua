@@ -1,0 +1,78 @@
+.farm-scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.farm-plot {
+  cursor: pointer;
+}
+
+.farm-chip-name {
+  font-family: var(--font-serif);
+  font-size: 12px;
+  fill: var(--color-ink);
+}
+
+.farm-chip-crop,
+.farm-tip-line {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  fill: var(--color-ink-soft);
+}
+
+.farm-chip-name,
+.farm-chip-crop,
+.farm-tip-line {
+  pointer-events: none;
+}
+
+.farm-plot:focus {
+  outline: none;
+}
+
+.farm-plot:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 3px;
+}
+
+.farm-pen:focus {
+  outline: none;
+}
+
+.farm-pen:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 3px;
+}
+
+.farm-source:focus {
+  outline: none;
+}
+
+.farm-source:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .farm-cloud-a {
+    animation: farm-cloud 18s ease-in-out infinite alternate;
+  }
+
+  .farm-cloud-b {
+    animation: farm-cloud 24s ease-in-out -8s infinite alternate;
+  }
+
+  .farm-cloud-c {
+    animation: farm-cloud 21s ease-in-out -4s infinite alternate;
+  }
+}
+
+@keyframes farm-cloud {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(22px);
+  }
+}

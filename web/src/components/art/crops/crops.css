@@ -1,0 +1,43 @@
+.crop-art {
+  display: block;
+  overflow: visible;
+  --crop-stagger: 0s;
+}
+
+.crop-art .crop-stalk,
+.crop-art .crop-leaf,
+.crop-art .crop-canopy,
+.crop-art .crop-head {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.crop-tomatoes { --crop-delay: 0.2s; --crop-dur: 5.2s; --crop-sway: 2.2deg; }
+.crop-peppers { --crop-delay: 0.9s; --crop-dur: 4.6s; --crop-sway: 2.6deg; }
+.crop-potatoes { --crop-delay: 1.4s; --crop-dur: 5.6s; --crop-sway: 1.8deg; }
+.crop-olives { --crop-delay: 0.5s; --crop-dur: 6s; --crop-sway: 1.6deg; }
+.crop-wheat { --crop-delay: 1.1s; --crop-dur: 4.4s; --crop-sway: 2.8deg; }
+.crop-barley { --crop-delay: 0.4s; --crop-dur: 4.8s; --crop-sway: 3deg; }
+.crop-citrus { --crop-delay: 1.7s; --crop-dur: 5.8s; --crop-sway: 1.7deg; }
+.crop-dates { --crop-delay: 0.7s; --crop-dur: 6.2s; --crop-sway: 2deg; }
+.crop-grapes { --crop-delay: 1.3s; --crop-dur: 5s; --crop-sway: 2.4deg; }
+.crop-almonds { --crop-delay: 0.3s; --crop-dur: 5.4s; --crop-sway: 1.9deg; }
+.crop-generic { --crop-delay: 0.8s; --crop-dur: 5s; --crop-sway: 2deg; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .crop-art.is-animated .crop-stalk,
+  .crop-art.is-animated .crop-leaf,
+  .crop-art.is-animated .crop-canopy,
+  .crop-art.is-animated .crop-head {
+    animation: crop-sway var(--crop-dur, 5s) ease-in-out calc(var(--crop-delay, 0s) + var(--crop-stagger, 0s)) infinite alternate;
+  }
+}
+
+@keyframes crop-sway {
+  from {
+    transform: rotate(calc(var(--crop-sway, 2deg) * -1));
+  }
+  to {
+    transform: rotate(var(--crop-sway, 2deg));
+  }
+}
