@@ -1,0 +1,6 @@
+good: 29.9 s, scenes ['title', 'score', 'fields', 'team', 'advice']
+  -> /home/aram/Projects/Aqua/video/examples/good-farm.mp4
+ok: 29.9 s, scenes ['title', 'score', 'fields', 'team', 'advice']
+  -> /home/aram/Projects/Aqua/video/examples/ok-farm.mp4
+bad: 29.9 s, scenes ['title', 'score', 'fields', 'team', 'advice']
+  -> /home/aram/Projects/Aqua/video/examples/bad-farm.mp4
